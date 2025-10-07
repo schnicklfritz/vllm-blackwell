@@ -1,0 +1,4 @@
+st-config/
+st-data/
+docker-compose.override.yml
+*.log

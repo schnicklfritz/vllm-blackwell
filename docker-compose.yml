@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # SillyTavern - Official Image
+  sillytavern:
+    image: ghcr.io/sillytavern/sillytavern:latest
+    container_name: sillytavern
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./st-config:/home/node/app/config
+      - ./st-data:/home/node/app/data
+    restart: unless-stopped
+
+  # vLLM - Custom Blackwell Image
+  vllm:
+    image: schnicklbob/vllm-blackwell:latest
+    container_name: vllm
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    ports:
+      - "5000:8000"
+    volumes:
+      - huggingface-cache:/home/vllm/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: >
+      cognitivecomputations/dolphin-2.9-llama3-8b
+      --host 0.0.0.0
+      --port 8000
+    restart: unless-stopped
+
+volumes:
+  huggingface-cache:
