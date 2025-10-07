@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TORCH_CUDA_ARCH_LIST="12.0"
 ENV VLLM_FLASH_ATTN_VERSION=2
 
-# Install dependencies
+# Install dependencies (removed nvidia-cuda-toolkit)
 RUN apt-get update && apt-get install -y \
     python3.12 \
     python3.12-venv \
@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     git \
     curl \
-    nvidia-cuda-toolkit \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
